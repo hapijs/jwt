@@ -174,9 +174,19 @@ describe('Token', () => {
         });
     });
 
-    describe('verify()', () => {
+    describe('verifySignature()', () => {
 
         it('validates signature', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok' }, secret);
+            const artifacts = Jwt.token.decode(token);
+
+            Jwt.token.verifySignature(artifacts, { key: secret, algorithm: 'HS256' });
+            Jwt.token.verifySignature(artifacts, { key: secret, algorithms: ['HS256', 'HS512'] });
+        });
+
+        it('invalidates signature', () => {
 
             const secret = 'some_shared_secret';
             const token = Jwt.token.generate({ test: 'ok' }, secret);
@@ -186,6 +196,9 @@ describe('Token', () => {
 
             expect(() => Jwt.token.verify(artifacts, 'wrong_secret')).to.throw('Invalid token signature');
         });
+    });
+
+    describe('verifyPayload()', () => {
 
         it('validates claims', () => {
 

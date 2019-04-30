@@ -16,6 +16,7 @@
         "@hapi/bounce": "1.x.x",
         "@hapi/bourne": "1.x.x",
         "@hapi/catbox-object": "1.x.x",
+        "@hapi/cryptiles": "4.x.x",
         "@hapi/hoek": "6.x.x",
         "@hapi/joi": "15.x.x",
         "@hapi/wreck": "15.x.x",
@@ -23,7 +24,6 @@
     },
     "devDependencies": {
         "@hapi/code": "5.x.x",
-        "@hapi/cryptiles": "4.x.x",
         "@hapi/hapi": "18.x.x",
         "@hapi/lab": "18.x.x",
         "node-forge": "0.8.x",

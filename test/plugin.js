@@ -60,6 +60,9 @@ describe('Plugin', () => {
 
         const res6 = await server.inject({ url: '/', headers: { authorization: 'Bearer a.b' } });
         expect(res6.statusCode).to.equal(401);
+
+        const res7 = await server.inject({ url: '/', headers: { authorization: `Bearer ${token1}x` } });
+        expect(res7.statusCode).to.equal(401);
     });
 
     it('authenticates a request (RSA256 public)', async () => {
