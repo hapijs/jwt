@@ -1,6 +1,7 @@
 'use strict';
 
 const Code = require('@hapi/code');
+const Hoek = require('@hapi/hoek');
 const Jwt = require('..');
 const Lab = require('@hapi/lab');
 
@@ -99,6 +100,26 @@ describe('Token', () => {
                 payload: { test: 'ok', iat: 1556520613 },
                 signature: 'm1cWB5oNHM_ygxoN6eVlZPBKq5ysyJ9vR8e7ikM0gBU'
             });
+        });
+
+        it('creates token with ttl', async () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok' }, { key: secret }, { ttlSec: 1 });
+            const artifacts = Jwt.token.decode(token);
+            Jwt.token.verify(artifacts, secret);
+
+            await Hoek.wait(1000);
+
+            expect(() => Jwt.token.verify(artifacts, secret)).to.throw('Token expired');
+        });
+
+        it('ignores ttl when exp present', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok', exp: 123 }, { key: secret }, { ttlSec: 1 });
+            const artifacts = Jwt.token.decode(token);
+            expect(artifacts.decoded.payload.exp).to.equal(123);
         });
     });
 
@@ -392,7 +413,7 @@ describe('Token', () => {
 
     describe('verifyTime()', () => {
 
-        it('validates max age', () => {
+        it('validates expiration', () => {
 
             const now = 1556582767980;
 
