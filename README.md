@@ -2,7 +2,7 @@
 
 # @commercial/jwt
 
-JWT (JSON Web Token) Authentication.
+#### JWT (JSON Web Token) Authentication.
 
 [![Build Status](https://travis-ci.org/hapijs/jwt.svg?branch=master)](https://travis-ci.org/hapijs/jwt)
 
