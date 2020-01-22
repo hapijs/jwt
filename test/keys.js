@@ -143,7 +143,7 @@ describe('Keys', () => {
                     expiresIn: 10,
                     staleIn: 5,
                     staleTimeout: 1,
-                    generateTimeout: 100
+                    generateTimeout: 10000          // Extra large for Windows to avoid catbox cache timeout waiting for disconnected error
                 }
             });
 
