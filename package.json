@@ -1,5 +1,5 @@
 {
-    "name": "@commercial/jwt",
+    "name": "@hapi/jwt",
     "description": "JWT (JSON Web Token) Authentication",
     "version": "2.0.0",
     "repository": "git://github.com/hapijs/jwt",
@@ -36,5 +36,5 @@
         "test": "lab -a @hapi/code -t 100 -L -m 10000",
         "test-cov-html": "lab -a @hapi/code -r html -o coverage.html"
     },
-    "license": "SEE LICENSE IN LICENSE.md"
+    "license": "BSD-3-Clause"
 }
