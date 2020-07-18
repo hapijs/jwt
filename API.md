@@ -54,14 +54,15 @@ internals.start = async function() {
 
 ## Token validation function
 
-You can provide your own custom validation function, that will be invoked after signature verification.The function is invoked by passing the artifacts of the token, request and response toolkit handler. This function should return the Promise that resolves to object having the below properties / you can also throw error. If you throw err, it will invoke the `h.unauthenticated` fn filling the error message (Boom style)
+You can provide your own custom validation function, that will be invoked after signature verification.The function is invoked by passing the artifacts of the token, request and response toolkit handler. This function should return the Promise that resolves to an object having the below properties as shown below or you can also throw error. If you throw err, it will invoke the `h.unauthenticated` fn filling the error message (Boom style)
 
 ```json
 {
-  "isValid": true | false,
-  "credentials": { obj }, // decoded payload
-  // this response will override and be set in response and takeover
-  "response": { obj } // any valid object, if any
+  "isValid": true,
+  "credentials": {
+      "user" : "bob"
+  },
+  "response": "user authentication successful" 
 }
 ```
 
