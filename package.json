@@ -27,9 +27,9 @@
     },
     "devDependencies": {
         "@hapi/code": "8.x.x",
-        "@hapi/hapi": "19.x.x",
-        "@hapi/lab": "22.x.x",
-        "node-forge": "0.8.x",
+        "@hapi/hapi": "20.x.x",
+        "@hapi/lab": "23.x.x",
+        "node-forge": "0.9.x",
         "node-rsa": "1.x.x"
     },
     "scripts": {
