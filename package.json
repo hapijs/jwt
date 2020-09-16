@@ -29,7 +29,7 @@
         "@hapi/code": "8.x.x",
         "@hapi/hapi": "20.x.x",
         "@hapi/lab": "23.x.x",
-        "node-forge": "0.9.x",
+        "node-forge": "0.10.x",
         "node-rsa": "1.x.x"
     },
     "scripts": {
