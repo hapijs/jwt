@@ -62,16 +62,16 @@ Declares a named strategy using the jwt scheme.
     - `keys`
         - `key` - String that is used for shared secret.
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-        - `kid` - String representing the key ID header (optional)
+        - `kid` - String representing the key ID header (optional).
 ##### Public algorithms
 - `options`
-    - `key` - Binary data of the public key.  Often retrieve via `fs.readFileSync('public.pem')`
+    - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
 ##### Public algorithms with optional algorithm and key ID header (kid):
 - `options`
     - `keys`
-        - `key` - Binary data of the public key.  Often retrieve via `fs.readFileSync('public.pem')`
+        - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-        - `kid` - String representing the key ID header (optional)
+        - `kid` - String representing the key ID header (optional).
 ##### Public and RSA algorithms using JWKS:
 - `options`
     - `keys`
@@ -86,10 +86,8 @@ Declares a named strategy using the jwt scheme.
 ##### Custom Function:
 - `options`
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
-
 ###
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
-
 #### Keys option examples:
 ```js
     // Single shared secret
@@ -169,11 +167,9 @@ Please note: it is not advisable to put shared secrets in your source code, use 
         - `exp` - Boolean to determine if the "Expiration Time" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
         - `maxAgeSec` - Integer to determine the maximum age of the token in seconds.  Default is `0`.  This is time validation using the "Issued At" [NumericDate](#registered-claim-names) (`iat`). Please note that `0` effectively disables this validation, it does not make the maximum age of the token 0 seconds.  Also if `maxAgeSec` is not `0` and `exp` is `true`, both will be validated and if either validation fails, the token validation will fail.
         - `timeSkewSec` - Integer to adust `exp` and `maxAgeSec` to account for server time drift in seconds. Default is `0`.
-
     - `httpAuthScheme` - String the represents the Authentication Scheme. Default is `'Bearer'`.
     - `unauthorizedAttributes` - String passed directly to `Boom.unauthorized` if no custom err is thrown. Useful for setting realm attribute in WWW-Authenticate header. Defaults to `undefined`.
     -  `validate` - Function that allows additional validation based on the decoded payload and to put specific credentials in the request object. Can be set to `false` if no additional validation is needed. Setting this to `false` will also set the credentials to be the exact payload of the token, including the [Registered Claim Names](#registered-claim-names).
-
 #### More on the `validate` function
 The validate function has a signature of `[async] function (artifacts, request, h)` where:
 - `artifacts` - An object that contains information from the token.
@@ -181,10 +177,10 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `decoded` - An object that contains decoded token.
         - `header` - An object that contain the header information.
             - `alg` - The algorithm used to sign the token.
-            - `typ` - The token type. (Should be `JWT`)
+            - `typ` - The token type (Should be `JWT`).
         - `payload` - An object containing the payload.
         - `signature` - The signature string of the token.
-    - `raw` - An object that contains the token that was sent broken out by `header`, `payload`, and `signature`,
+    - `raw` - An object that contains the token that was sent broken out by `header`, `payload`, and `signature`.
     - `keys` - An array of information about key(s) used for authentication
         - `key` - The key.
         - `algorithm` - The algorithm used to sign the token.
@@ -283,15 +279,15 @@ const verifyToken = (artifact, secret, options = {}) => {
 
 };
 
-// Get response of a succesfull verification
+// Get response of a succesful verification
 
 const validResponse = verifyToken(decodedToken, 'some_shared_secret');
 
-// Get response of a unsuccesfull verification due to wrong secret
+// Get response of a unsuccessful verification due to wrong shared secret
 
 const badSecretResponse = verifyToken(decodedToken, 'some_unshared_secret');
 
-// Get response of a unsuccesfull verification due to wrong iss
+// Get response of a unsuccessful verification due to wrong iss
 
 const badIssResonse = verifyToken(decodedToken, 'some_shared_secret', { iss: 'urn:issuer:different_test' });
 
@@ -353,12 +349,12 @@ Generates a token as a string where:
 Returns an Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.  This does not verify the token, it only decodes it where:
 - `token` - String of encoded token.
 - `options` - Optional configuration object with the following:
-    - `headless`: Boolean if set to `true` will decode a valid headless token.  Default is `false`
+    - `headless`: Boolean if set to `true` will decode a valid headless token.  Default is `false`.
 ### `verify(artifacts, secret, [options]`)
 A function that will complete if verification passes or throw an error if verfication fails where:
 - `artifacts` - Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
-    - `key` - String or buffer that creates signature
+    - `key` - String or buffer that creates signature.
     - `algorithm`- String containing an accepted [algorithm](#Key-algorithms-supported-by-jwt) to be used.  Default is `'HS256'`.
 - `options` - Optional configuration object with the following:
   - `aud`- String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token.
@@ -376,7 +372,7 @@ A function that will complete if the signature is valid or throw an error if inv
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
 - `raw` - Object of decoded token in the format of `artifacts.raw` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
-    - `key` - String or buffer that creates signature
+    - `key` - String or buffer that creates signature.
     - `algorithm`- String containing an accepted [algorithm](#Key-algorithms-supported-by-jwt) to be used.  Default is `'HS256'`.
 ### `verifyPayload({ decoded }, [options]`)
 A function that will complete if payload verification passes or throw an error if payload verification fails. This does not do verification on the signature, where:
@@ -405,9 +401,9 @@ List and explanation of Registered Claim Names according to [RFC 7519](https://t
 - `iat` - The "iat" (issued at) claim identifies the time at which the JWT was
    issued. Expressed in `NumericDate`.
 - `jti` - The "jti" (JWT ID) claim provides a unique identifier for the JWT. Expressed in a string.
-- `nonce` - While nonce is not an [RFC 7519](https://tools.ietf.org/html/rfc7519#section-4.1) Registered Claim, it is used on [Open ID](https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes) for the ID Tokens.
+- `nonce` - While `nonce` is not an [RFC 7519](https://tools.ietf.org/html/rfc7519#section-4.1) Registered Claim, it is used on [Open ID](https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes) for the ID Tokens.
 ## Key algorithms supported by jwt
-- Public: ['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512']
-- RSA: ['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512']
-- HMAC: ['HS256', 'HS384', 'HS512']
-- No Algorithm: ['none']
+- Public: `['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512']`
+- RSA: `['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512']`
+- HMAC: `['HS256', 'HS384', 'HS512']`
+- No Algorithm: `['none']`
