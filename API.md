@@ -341,7 +341,6 @@ Generates a token as a string where:
     - `algorithm`- String containing an accepted [algorithm](#Key-algorithms-supported-by-jwt) to be used.  Default is `'HS256'`.
 - `options` - Optional configuration object with the following:
     - `header` - Object to put addtional key/value pairs in the header of the token in addition to `alg` and `typ`.
-    - `encoding` - String to set what encoding is used when token is base 64 URL encoded.  Default is `'utf8'`. Encoding done by [@hapi/b64](https://hapi.dev/module/b64/api/?v=5.0.0#base64urlencodevalue).
     - `now` - Integer as an alternative way to set `iat` claim.  Takes JavaScript style epoch time (with ms).  `iat` claim must not be set and `iat` option must not be `false`. Milliseconds are truncated, not rounded.
     - `ttlSec` -  Integer as an alternative way to set `exp` claim. `exp` is set to be `iat` + `ttlSec`.  `exp` claim must not be set.
     - `iat` - Boolean if set to `false` to turn off default behavior of creating an `iat` claim.
