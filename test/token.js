@@ -102,7 +102,6 @@ describe('Token', () => {
             });
         });
 
-
         it('creates and verifies a token (latin1 encoding)', () => {
 
             const secret = 'some_shared_secret';
