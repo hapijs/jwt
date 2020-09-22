@@ -102,6 +102,23 @@ describe('Token', () => {
             });
         });
 
+
+        it('creates and verifies a token (latin1 encoding)', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ food: 'éclair' }, { key: secret }, { now: 1556520613637, encoding: 'latin1', header: { location: 'café' } });
+            const artifacts = Jwt.token.decode(token);
+            Jwt.token.verify(artifacts, secret);
+
+            expect(artifacts.decoded).to.equal({
+                header: { alg: 'HS256', typ: 'JWT', location: 'café' },
+                payload: { food: 'éclair', iat: 1556520613 },
+                signature: 'uPQxcNyYNhRjy9CVazpuN4vr5SROVSJn9H463_QigyQ'
+            });
+
+        });
+
+
         it('creates token with ttl', async () => {
 
             const secret = 'some_shared_secret';
