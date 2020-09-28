@@ -210,7 +210,7 @@ validate: (artifacts, request, h) => {
     }
 
     if (artifacts.decoded.payload.user === 'crash') {
-        throw 'We hit a tree!'; // custom message in Boom.unauthorized
+        throw new Error('We hit a tree!'); // custom message in Boom.unauthorized
     }
 
     let isValid;
