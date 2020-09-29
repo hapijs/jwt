@@ -236,9 +236,7 @@ validate: (artifacts, request, h) => {
 }
 ```
 ## token
-### Introduction
 In addition to creating an auth strategy, the `jwt` module can be used directly to run token based functions.
-### Usage
 ```js
 // Load modules
 
