@@ -59,7 +59,7 @@ internals.start();
 Declares a named strategy using the jwt scheme.
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
     - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#Keys-option-examples) for a handful of ways to express this option.
-##### HMAC algorithms:
+##### HMAC algorithms
 - `options`
     - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
 ##### HMAC algorithms with optional algorithm and key ID header (kid):
@@ -77,23 +77,23 @@ Declares a named strategy using the jwt scheme.
         - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
         - `kid` - String representing the key ID header (optional).
-##### Public and RSA algorithms using JWKS:
+##### Public and RSA algorithms using JWKS
 - `options`
     - `keys`
         - `uri` - String that defines your json web key set uri.
         - `rejectUnauthorized` - Boolean that determines if TLS flag indicating whether the client should reject a response from a server with invalid certificates. Default is `true`.
         - `headers` - Object containing the request headers to send to the uri (optional).
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-##### No algorithms:
+##### No algorithms
 - `options`
     - `keys`
         - `algorithms` - `['none']`
-##### Custom Function:
+##### Custom Function
 - `options`
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
-#### Keys option examples:
+#### Keys option examples
 ```js
     // Single shared secret
     {
@@ -162,7 +162,6 @@ Please note: it is not advisable to put shared secrets in your source code, use 
         keys: () => { return 'some_shared_secret'; }
     }
 ```
-### `server.auth.strategy('my_jwt_stategy', 'jwt', options)` (continued)
 - `options`
     - `verify` - Object to determine how key contents are verified beyond key signature.  Set to `false` to do no verification. This includes the `keys` even if they are defined.
         - `aud` - String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token. Set to boolean `false` to not verify aud. Required if `verify` is not `false`.
@@ -336,7 +335,7 @@ Displays the following to the console:
   badIssResonse: { isValid: false, error: 'Token payload iss value not allowed' }
 }
 ```
-### `generate(payload, secret, [options]`)
+### `generate(payload, secret, [options])`
 Generates a token as a string where:
 - `payload` - Object that contains [Registered Claim Names](#registered-claim-names) (optional) and additional credentials (optional).  While both [Registered Claim Names](#registered-claim-names) and additional credentials are optional, an empty payload `{}`, would result in a key that only has an `iat` of now. This would make a token that is valid for one second and containing no other information.
 - `secret` - String or buffer that creates signature **or** object where:
