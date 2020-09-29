@@ -60,36 +60,36 @@ Declares a named strategy using the jwt scheme.
 `server.auth.strategy('my_jwt_stategy', 'jwt', options)`
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
     - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#Keys-option-examples) for a handful of ways to express this option.
-##### HMAC algorithms
+#### HMAC algorithms
 - `options`
     - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
-##### HMAC algorithms with optional algorithm and key ID header (kid)
+#### HMAC algorithms with optional algorithm and key ID header (kid)
 - `options`
     - `keys`
         - `key` - String that is used for shared secret.
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
         - `kid` - String representing the key ID header (optional).
-##### Public algorithms
+#### Public algorithms
 - `options`
     - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
-##### Public algorithms with optional algorithm and key ID header (kid)
+#### Public algorithms with optional algorithm and key ID header (kid)
 - `options`
     - `keys`
         - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
         - `kid` - String representing the key ID header (optional).
-##### Public and RSA algorithms using JWKS
+#### Public and RSA algorithms using JWKS
 - `options`
     - `keys`
         - `uri` - String that defines your json web key set uri.
         - `rejectUnauthorized` - Boolean that determines if TLS flag indicating whether the client should reject a response from a server with invalid certificates. Default is `true`.
         - `headers` - Object containing the request headers to send to the uri (optional).
         - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-##### No algorithms
+#### No algorithms
 - `options`
     - `keys`
         - `algorithms` - `['none']`
-##### Custom Function
+#### Custom Function
 - `options`
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
@@ -163,6 +163,7 @@ Please note: it is not advisable to put shared secrets in your source code, use 
         keys: () => { return 'some_shared_secret'; }
     }
 ```
+#### not sure continue
 - `options`
     - `verify` - Object to determine how key contents are verified beyond key signature.  Set to `false` to do no verification. This includes the `keys` even if they are defined.
         - `aud` - String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token. Set to boolean `false` to not verify aud. Required if `verify` is not `false`.
@@ -175,7 +176,7 @@ Please note: it is not advisable to put shared secrets in your source code, use 
     - `httpAuthScheme` - String the represents the Authentication Scheme. Default is `'Bearer'`.
     - `unauthorizedAttributes` - String passed directly to `Boom.unauthorized` if no custom err is thrown. Useful for setting realm attribute in WWW-Authenticate header. Defaults to `undefined`.
     -  `validate` - Function that allows additional validation based on the decoded payload and to put specific credentials in the request object. Can be set to `false` if no additional validation is needed. Setting this to `false` will also set the credentials to be the exact payload of the token, including the [Registered Claim Names](#registered-claim-names).
-#### More on the `validate` function
+## validate
 The validate function has a signature of `[async] function (artifacts, request, h)` where:
 - `artifacts` - An object that contains information from the token.
     - `token` - The complete token that was sent.
@@ -198,7 +199,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `response` -  Will be used immediately as a takeover response. `isValid` and `credentials` are ignored if provided.
 - Throwing an error from this function will replace default `message` in the `Boom.unauthorized` error.
 - Typically, `credentials` are only included when `isValid` is `true`, but there are cases when the application needs to know who tried to authenticate even when it fails (e.g. with authentication mode `'try'`).
-#### `validate: (artifacts, request, h) => {}` example
+### validate example
 Token payload:
 ```js
 {
@@ -336,7 +337,8 @@ Displays the following to the console:
   badIssResonse: { isValid: false, error: 'Token payload iss value not allowed' }
 }
 ```
-### `generate(payload, secret, [options])`
+## generate
+`generate(payload, secret, [options])`
 Generates a token as a string where:
 - `payload` - Object that contains [Registered Claim Names](#registered-claim-names) (optional) and additional credentials (optional).  While both [Registered Claim Names](#registered-claim-names) and additional credentials are optional, an empty payload `{}`, would result in a key that only has an `iat` of now. This would make a token that is valid for one second and containing no other information.
 - `secret` - String or buffer that creates signature **or** object where:
@@ -347,12 +349,14 @@ Generates a token as a string where:
     - `now` - Integer as an alternative way to set `iat` claim.  Takes JavaScript style epoch time (with ms).  `iat` claim must not be set and `iat` option must not be `false`. Milliseconds are truncated, not rounded.
     - `ttlSec` -  Integer as an alternative way to set `exp` claim. `exp` is set to be `iat` + `ttlSec`.  `exp` claim must not be set.
     - `iat` - Boolean if set to `false` to turn off default behavior of creating an `iat` claim.
-### `decode(token, [options]`)
+## decode
+`decode(token, [options]`)
 Returns an Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.  This does not verify the token, it only decodes it where:
 - `token` - String of encoded token.
 - `options` - Optional configuration object with the following:
     - `headless`: Boolean if set to `true` will decode a valid headless token.  Default is `false`.
-### `verify(artifacts, secret, [options]`)
+## verify
+`verify(artifacts, secret, [options]`)
 A function that will complete if verification passes or throw an error if verfication fails where:
 - `artifacts` - Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
@@ -369,18 +373,21 @@ A function that will complete if verification passes or throw an error if verfic
   - `now` - Integer that represents the current time in JavaScript epoch format (with msecs).  When evaluated the msecs are truncated, not rounded.
   - `maxAgeSec` - Integer to determine the maximum age of the token in seconds. This is time validation using the "Issued At" [NumericDate](#registered-claim-names) (`iat`).
   - `timeSkewSec` - Integer to adust `exp` and `maxAgeSec` to account for server time drift in seconds.
-### `verifySignature({ decoded, raw }, secret`)
+## verifySignature
+`verifySignature({ decoded, raw }, secret`)
 A function that will complete if the signature is valid or throw an error if invalid.  This does not do verification on the payload.  An expried token will not throw an error if the signature is valid, where:
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
 - `raw` - Object of decoded token in the format of `artifacts.raw` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
     - `key` - String or buffer that creates signature.
     - `algorithm`- String containing an accepted [algorithm](#Key-algorithms-supported-by-jwt) to be used.  Default is `'HS256'`.
-### `verifyPayload({ decoded }, [options]`)
+## verifyPayload
+`verifyPayload({ decoded }, [options]`)
 A function that will complete if payload verification passes or throw an error if payload verification fails. This does not do verification on the signature, where:
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
 - `options` - Optional configuration object in format of `options` descibed in the [`verify`](#verify(artifacts,-secret,-[options])) section above.
-### `verifyTime({ decoded }, [options, nowSec]`)
+## verifyTime
+`verifyTime({ decoded }, [options, nowSec]`)
 A function that will complete if `iat` and `exp` verification pass and throw an error if verification fails. This is a subset of `verifyPayload` for only `iat` and `exp` where:
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
 - `options` - Optional configuration object with the following:
