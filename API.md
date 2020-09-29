@@ -49,6 +49,8 @@ internals.start = async function () {
 
     server.auth.default('my_jwt_stategy');
 };
+
+internals.start();
 ```
 ### `server.auth.strategy('my_jwt_stategy', 'jwt', options)`
 Declares a named strategy using the jwt scheme.
@@ -131,7 +133,7 @@ Please note: it is not advisable to put shared secrets in your source code, use 
 
     // Single Public Key
     {
-        keys: `fs.readFileSync('public.pem')`
+        keys: fs.readFileSync('public.pem')
     }
     ...
 
