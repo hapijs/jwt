@@ -62,7 +62,7 @@ Declares a named strategy using the jwt scheme.
 #### options
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
 ##### keys
-  - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#Keys-option-examples) for a handful of ways to express this option.
+  - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#keys-option-examples) for a handful of ways to express this option.
 ###### HMAC algorithms
 - `options`
     - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
