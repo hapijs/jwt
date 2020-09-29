@@ -97,7 +97,7 @@ Declares a named strategy using the jwt scheme.
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
-##### Keys option examples
+###### Keys option examples
 ```js
     // Single shared secret
     {
@@ -179,6 +179,7 @@ Please note: it is not advisable to put shared secrets in your source code, use 
     - `unauthorizedAttributes` - String passed directly to `Boom.unauthorized` if no custom err is thrown. Useful for setting realm attribute in WWW-Authenticate header. Defaults to `undefined`.
     -  `validate` - Function that allows additional validation based on the decoded payload and to put specific credentials in the request object. Can be set to `false` if no additional validation is needed. Setting this to `false` will also set the credentials to be the exact payload of the token, including the [Registered Claim Names](#registered-claim-names).
 ##### validate
+
 The validate function has a signature of `[async] function (artifacts, request, h)` where:
 - `artifacts` - An object that contains information from the token.
     - `token` - The complete token that was sent.
@@ -201,7 +202,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `response` -  Will be used immediately as a takeover response. `isValid` and `credentials` are ignored if provided.
 - Throwing an error from this function will replace default `message` in the `Boom.unauthorized` error.
 - Typically, `credentials` are only included when `isValid` is `true`, but there are cases when the application needs to know who tried to authenticate even when it fails (e.g. with authentication mode `'try'`).
-### example
+##### example
 Token payload:
 ```js
 {
