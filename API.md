@@ -55,14 +55,15 @@ internals.start = async function () {
 
 internals.start();
 ```
-### `server.auth.strategy('my_jwt_stategy', 'jwt', options)`
+### server.auth.strategy
 Declares a named strategy using the jwt scheme.
+`server.auth.strategy('my_jwt_stategy', 'jwt', options)`
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
     - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#Keys-option-examples) for a handful of ways to express this option.
 ##### HMAC algorithms
 - `options`
     - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
-##### HMAC algorithms with optional algorithm and key ID header (kid):
+##### HMAC algorithms with optional algorithm and key ID header (kid)
 - `options`
     - `keys`
         - `key` - String that is used for shared secret.
@@ -71,7 +72,7 @@ Declares a named strategy using the jwt scheme.
 ##### Public algorithms
 - `options`
     - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
-##### Public algorithms with optional algorithm and key ID header (kid):
+##### Public algorithms with optional algorithm and key ID header (kid)
 - `options`
     - `keys`
         - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
@@ -197,7 +198,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `response` -  Will be used immediately as a takeover response. `isValid` and `credentials` are ignored if provided.
 - Throwing an error from this function will replace default `message` in the `Boom.unauthorized` error.
 - Typically, `credentials` are only included when `isValid` is `true`, but there are cases when the application needs to know who tried to authenticate even when it fails (e.g. with authentication mode `'try'`).
-#### `validate: (artifacts, request, h) => {}` example:
+#### `validate: (artifacts, request, h) => {}` example
 Token payload:
 ```js
 {
