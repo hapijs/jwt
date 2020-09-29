@@ -91,7 +91,7 @@ Declares a named strategy using the jwt scheme.
 ##### Custom Function:
 - `options`
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
-###
+
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
 #### Keys option examples:
 ```js
