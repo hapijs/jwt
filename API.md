@@ -64,7 +64,7 @@ Declares a named strategy using the jwt scheme.
   - `keys` - Object or array of objects containing the key method to be used for jwt verification. The keys object can be expressed in many ways. See [keys option examples](#keys-option-examples) for a handful of ways to express this option.
 ##### keys
 
-There are many ways you can do keys and here is an extensive list of all of those key options
+There are many ways you can do keys and here is an extensive list of all the key options.
 ###### HMAC algorithms
 
 You can do HMAC algorithms a couple of different ways. You can do it either like:
@@ -94,8 +94,6 @@ OR with optional algorithm and key ID header (kid) like:
 ###### Custom Function
   - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
-###### Special Note
-It is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
 ###### keys option examples
 ```js
     // Single shared secret
@@ -165,6 +163,9 @@ It is not advisable to put shared secrets in your source code, use environment v
         keys: () => { return 'some_shared_secret'; }
     }
 ```
+###### Important Security Note
+
+It is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
 ##### verify
 
 In addition to keys you can provide other options.
