@@ -61,40 +61,35 @@ Declares a named strategy using the jwt scheme.
 `server.auth.strategy('my_jwt_stategy', 'jwt', options)`
 #### options
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
+  - `keys` - Object or array of objects containing the key method to be used for jwt verification. The keys object can be expressed in many ways. See [keys option examples](#keys-option-examples) for a handful of ways to express this option.
 ##### keys
-  - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [keys option examples](#keys-option-examples) for a handful of ways to express this option.
+
+There are many ways you can do keys and here is an extensive list of all of those key options
 ###### HMAC algorithms
-- `options`
-    - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
+  - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
 ###### HMAC algorithms with optional algorithm and key ID header (kid)
-- `options`
-    - `keys`
-        - `key` - String that is used for shared secret.
-        - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-        - `kid` - String representing the key ID header (optional).
+  - `keys`
+    - `key` - String that is used for shared secret.
+    - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
+    - `kid` - String representing the key ID header (optional).
 ###### Public algorithms
-- `options`
-    - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
+  - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
 ###### Public algorithms with optional algorithm and key ID header (kid)
-- `options`
-    - `keys`
-        - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
-        - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
-        - `kid` - String representing the key ID header (optional).
+  - `keys`
+    - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
+    - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
+    - `kid` - String representing the key ID header (optional).
 ###### Public and RSA algorithms using JWKS
-- `options`
-    - `keys`
-        - `uri` - String that defines your json web key set uri.
-        - `rejectUnauthorized` - Boolean that determines if TLS flag indicating whether the client should reject a response from a server with invalid certificates. Default is `true`.
-        - `headers` - Object containing the request headers to send to the uri (optional).
-        - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
+  - `keys`
+    - `uri` - String that defines your json web key set uri.
+    - `rejectUnauthorized` - Boolean that determines if TLS flag indicating whether the client should reject a response from a server with invalid certificates. Default is `true`.
+    - `headers` - Object containing the request headers to send to the uri (optional).
+    - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
 ###### No algorithms
-- `options`
-    - `keys`
-        - `algorithms` - `['none']`
+  - `keys`
+    - `algorithms` - `['none']`
 ###### Custom Function
-- `options`
-    - `keys` - `(param) => { return key; }` - Custom function that derives the key.
+  - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
 ###### keys option examples
@@ -167,18 +162,21 @@ Please note: it is not advisable to put shared secrets in your source code, use 
     }
 ```
 - `options`
-    - `verify` - Object to determine how key contents are verified beyond key signature.  Set to `false` to do no verification. This includes the `keys` even if they are defined.
-        - `aud` - String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token. Set to boolean `false` to not verify aud. Required if `verify` is not `false`.
-        - `iss` - String or array of strings that matches the issuer of the token. Set to boolean `false` to not verify iss. Required if `verify` is not `false`.
-        - `sub` - String or array of strings that matches the subject of the token. Set to boolean `false` to not verify sub. Required if `verify` is not `false`.
-        - `nbf` - Boolean to determine if the "Not Before" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
-        - `exp` - Boolean to determine if the "Expiration Time" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
-        - `maxAgeSec` - Integer to determine the maximum age of the token in seconds.  Default is `0`.  This is time validation using the "Issued At" [NumericDate](#registered-claim-names) (`iat`). Please note that `0` effectively disables this validation, it does not make the maximum age of the token 0 seconds.  Also if `maxAgeSec` is not `0` and `exp` is `true`, both will be validated and if either validation fails, the token validation will fail.
-        - `timeSkewSec` - Integer to adust `exp` and `maxAgeSec` to account for server time drift in seconds. Default is `0`.
-    - `httpAuthScheme` - String the represents the Authentication Scheme. Default is `'Bearer'`.
-    - `unauthorizedAttributes` - String passed directly to `Boom.unauthorized` if no custom err is thrown. Useful for setting realm attribute in WWW-Authenticate header. Defaults to `undefined`.
-    -  `validate` - Function that allows additional validation based on the decoded payload and to put specific credentials in the request object. Can be set to `false` if no additional validation is needed. Setting this to `false` will also set the credentials to be the exact payload of the token, including the [Registered Claim Names](#registered-claim-names).
+##### verify
+  - `verify` - Object to determine how key contents are verified beyond key signature.  Set to `false` to do no verification. This includes the `keys` even if they are defined.
+    - `aud` - String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token. Set to boolean `false` to not verify aud. Required if `verify` is not `false`.
+    - `iss` - String or array of strings that matches the issuer of the token. Set to boolean `false` to not verify iss. Required if `verify` is not `false`.
+    - `sub` - String or array of strings that matches the subject of the token. Set to boolean `false` to not verify sub. Required if `verify` is not `false`.
+    - `nbf` - Boolean to determine if the "Not Before" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
+    - `exp` - Boolean to determine if the "Expiration Time" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
+    - `maxAgeSec` - Integer to determine the maximum age of the token in seconds.  Default is `0`.  This is time validation using the "Issued At" [NumericDate](#registered-claim-names) (`iat`). Please note that `0` effectively disables this validation, it does not make the maximum age of the token 0 seconds.  Also if `maxAgeSec` is not `0` and `exp` is `true`, both will be validated and if either validation fails, the token validation will fail.
+    - `timeSkewSec` - Integer to adust `exp` and `maxAgeSec` to account for server time drift in seconds. Default is `0`.
+##### httpAuthScheme
+  - `httpAuthScheme` - String the represents the Authentication Scheme. Default is `'Bearer'`.
+##### unauthorizedAttributes
+  - `unauthorizedAttributes` - String passed directly to `Boom.unauthorized` if no custom err is thrown. Useful for setting realm attribute in WWW-Authenticate header. Defaults to `undefined`.
 ##### validate
+  -  `validate` - Function that allows additional validation based on the decoded payload and to put specific credentials in the request object. Can be set to `false` if no additional validation is needed. Setting this to `false` will also set the credentials to be the exact payload of the token, including the [Registered Claim Names](#registered-claim-names).
 
 The validate function has a signature of `[async] function (artifacts, request, h)` where:
 - `artifacts` - An object that contains information from the token.
