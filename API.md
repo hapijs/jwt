@@ -66,15 +66,18 @@ Declares a named strategy using the jwt scheme.
 
 There are many ways you can do keys and here is an extensive list of all of those key options
 ###### HMAC algorithms
+
+You can do HMAC algorithms a couple of different ways. You can do it either like:
   - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
-###### HMAC algorithms with optional algorithm and key ID header (kid)
+OR with optional algorithm and key ID header (kid) like:
   - `keys`
     - `key` - String that is used for shared secret.
     - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
     - `kid` - String representing the key ID header (optional).
 ###### Public algorithms
+Similar to the HMAC algorithms you can do it like:
   - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
-###### Public algorithms with optional algorithm and key ID header (kid)
+OR with optional algorithm and key ID header (kid) like:
   - `keys`
     - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
     - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
@@ -91,7 +94,8 @@ There are many ways you can do keys and here is an extensive list of all of thos
 ###### Custom Function
   - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
-Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
+###### Special Note
+It is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
 ###### keys option examples
 ```js
     // Single shared secret
@@ -161,8 +165,9 @@ Please note: it is not advisable to put shared secrets in your source code, use 
         keys: () => { return 'some_shared_secret'; }
     }
 ```
-- `options`
 ##### verify
+
+In addition to keys you can provide other options.
   - `verify` - Object to determine how key contents are verified beyond key signature.  Set to `false` to do no verification. This includes the `keys` even if they are defined.
     - `aud` - String or `RegExp` **or** array of strings or `RegExp` that matches the audience of the token. Set to boolean `false` to not verify aud. Required if `verify` is not `false`.
     - `iss` - String or array of strings that matches the issuer of the token. Set to boolean `false` to not verify iss. Required if `verify` is not `false`.
