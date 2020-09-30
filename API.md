@@ -202,7 +202,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `response` -  Will be used immediately as a takeover response. `isValid` and `credentials` are ignored if provided.
 - Throwing an error from this function will replace default `message` in the `Boom.unauthorized` error.
 - Typically, `credentials` are only included when `isValid` is `true`, but there are cases when the application needs to know who tried to authenticate even when it fails (e.g. with authentication mode `'try'`).
-##### example
+###### example
 Token payload:
 ```js
 {
