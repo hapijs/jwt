@@ -94,7 +94,7 @@ OR with optional algorithm and key ID header (kid) like:
 ###### Custom Function
   - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
-###### keys option examples
+###### Keys Option Examples
 ```js
     // Single shared secret
     {
