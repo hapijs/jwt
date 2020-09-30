@@ -62,7 +62,7 @@ Declares a named strategy using the jwt scheme.
 #### options
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
 ##### keys
-  - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [Keys option examples](#keys-option-examples) for a handful of ways to express this option.
+  - `keys` - Object or array of objects containing the key method to be used for jwt verifiction. The keys object can be expressed in many ways. See [keys option examples](#keys-option-examples) for a handful of ways to express this option.
 ###### HMAC algorithms
 - `options`
     - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
@@ -97,7 +97,7 @@ Declares a named strategy using the jwt scheme.
     - `keys` - `(param) => { return key; }` - Custom function that derives the key.
 
 Please note: it is not advisable to put shared secrets in your source code, use environment variables and/or other encryption methods to encrypt/decrypt your shared secret.  It is also not advisable to use no algorithms.  Both of these practices are ideal for local testing and should be used with caution.
-###### Keys option examples
+###### keys option examples
 ```js
     // Single shared secret
     {
@@ -202,7 +202,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `response` -  Will be used immediately as a takeover response. `isValid` and `credentials` are ignored if provided.
 - Throwing an error from this function will replace default `message` in the `Boom.unauthorized` error.
 - Typically, `credentials` are only included when `isValid` is `true`, but there are cases when the application needs to know who tried to authenticate even when it fails (e.g. with authentication mode `'try'`).
-###### example
+###### validate example
 Token payload:
 ```js
 {
@@ -241,7 +241,7 @@ validate: (artifacts, request, h) => {
 ```
 ## token
 
-In addition to creating an auth strategy, the `jwt` module can be used directly to run token based functions.
+In addition to creating an auth strategy, the `jwt` module can be used directly even if you aren't using hapi, to run token based functions.
 ```js
 // Load modules
 
@@ -356,6 +356,7 @@ Generates a token as a string where:
     - `iat` - Boolean if set to `false` to turn off default behavior of creating an `iat` claim.
 ### decode
 `decode(token, [options])`
+
 Returns an Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.  This does not verify the token, it only decodes it where:
 - `token` - String of encoded token.
 - `options` - Optional configuration object with the following:
