@@ -66,18 +66,23 @@ Declares a named strategy using the jwt scheme.
 
 There are many ways you can do keys and here is an extensive list of all the key options.
 ###### HMAC algorithms
-
 You can do HMAC algorithms a couple of different ways. You can do it either like:
+
   - `keys` - `'some_shared_secret'` - a string that is used for shared secret.
+
 OR with optional algorithm and key ID header (kid) like:
+
   - `keys`
     - `key` - String that is used for shared secret.
     - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
     - `kid` - String representing the key ID header (optional).
 ###### Public algorithms
 Similar to the HMAC algorithms you can do it like:
+
   - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
+
 OR with optional algorithm and key ID header (kid) like:
+
   - `keys`
     - `key` - Binary data of the public key.  Often retrieve via `Fs.readFileSync('public.pem')`.
     - `algorithms` - Array of accepted [algorithms](#Key-algorithms-supported-by-jwt) (optional).
@@ -93,7 +98,6 @@ OR with optional algorithm and key ID header (kid) like:
     - `algorithms` - `['none']`
 ###### Custom Function
   - `keys` - `(param) => { return key; }` - Custom function that derives the key.
-
 ###### Keys Option Examples
 ```js
     // Single shared secret
