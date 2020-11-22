@@ -58,6 +58,20 @@ describe('Token', () => {
         });
     });
 
+    it('creates and verifies a token (no typ)', () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ test: 'ok' }, secret, { typ: false });
+        const artifacts = Jwt.token.decode(token);
+        Jwt.token.verify(artifacts, secret);
+
+        expect(artifacts.decoded).to.equal({
+            header: { alg: 'HS256' },
+            payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+            signature: artifacts.decoded.signature
+        });
+    });
+
     describe('generate()', () => {
 
         it('creates and verifies a token (custom now)', () => {
@@ -177,7 +191,7 @@ describe('Token', () => {
 
         it('errors on non JWT token', () => {
 
-            const token = `${Jwt.utils.b64stringify({ alg: 'none' })}.${Jwt.utils.b64stringify({}, 'utf8')}.`;
+            const token = `${Jwt.utils.b64stringify({ alg: 'none', typ: 'Not JWT' })}.${Jwt.utils.b64stringify({}, 'utf8')}.`;
             expect(() => Jwt.token.decode(token)).to.throw('Token is not a JWT');
         });
 
