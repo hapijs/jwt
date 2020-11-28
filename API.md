@@ -194,7 +194,7 @@ The validate function has a signature of `[async] function (artifacts, request, 
     - `decoded` - An object that contains decoded token.
         - `header` - An object that contain the header information.
             - `alg` - The algorithm used to sign the token.
-            - `typ` - The token type (Should be `'JWT'` if exists) Optional.
+            - `typ` - The token type (should be `'JWT'` if present) (optional).
         - `payload` - An object containing the payload.
         - `signature` - The signature string of the token.
     - `raw` - An object that contains the token that was sent broken out by `header`, `payload`, and `signature`.
