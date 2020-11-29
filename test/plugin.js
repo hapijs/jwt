@@ -67,7 +67,7 @@ describe('Plugin', () => {
 
     it('authenticates a request (RSA256 public)', async () => {
 
-        const jwks = await Mock.jwks({ rsa: false, public: true });
+        const jwks = await Mock.jwks({ rsa: false, public: true, reformat: true });
 
         const server = Hapi.server();
         await server.register(Jwt);
@@ -199,7 +199,7 @@ describe('Plugin', () => {
     it('supports multiple strategies', async () => {
 
         const secret = 'some_shared_secret';
-        const jwks = await Mock.jwks();
+        const jwks = await Mock.jwks({ reformat: true });
 
         const server = Hapi.server();
         await server.register(Jwt);
