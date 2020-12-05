@@ -16,7 +16,7 @@ const { describe, it } = exports.lab = Lab.script();
 const expect = Code.expect;
 
 
-describe('Plugin', () => {
+describe('Plugin', { retry: true }, () => {
 
     it('authenticates a request (HS256)', async () => {
 
