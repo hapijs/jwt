@@ -16,7 +16,7 @@ const { describe, it } = exports.lab = Lab.script();
 const expect = Code.expect;
 
 
-describe('Plugin', { retry: true }, () => {
+describe('Plugin', () => {
 
     it('authenticates a request (HS256)', async () => {
 
@@ -65,7 +65,7 @@ describe('Plugin', { retry: true }, () => {
         expect(res7.statusCode).to.equal(401);
     });
 
-    it('authenticates a request (RSA256 public)', async () => {
+    it('authenticates a request (RSA256 public)', { retry: true }, async () => {
 
         const jwks = await Mock.jwks({ rsa: false, public: true, reformat: true });
 
@@ -196,7 +196,7 @@ describe('Plugin', { retry: true }, () => {
         expect(res2.statusCode).to.equal(401);
     });
 
-    it('supports multiple strategies', async () => {
+    it('supports multiple strategies', { retry: true }, async () => {
 
         const secret = 'some_shared_secret';
         const jwks = await Mock.jwks({ reformat: true });
