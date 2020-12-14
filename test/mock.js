@@ -35,7 +35,7 @@ exports.jwks = async function (options = {}) {
         const now = new Date();
         const cert = Forge.pki.createCertificate();
         cert.publicKey = Forge.pki.publicKeyFromPem(pair.public);
-        cert.serialNumber = Cryptiles.randomString(5);
+        cert.serialNumber = parseInt(Cryptiles.randomDigits(15)).toString(16);
         cert.validity.notBefore = now;
         cert.validity.notAfter = now;
         cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
