@@ -41,14 +41,7 @@ exports.jwks = async function (options = {}) {
         cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
         cert.setSubject([{ name: 'commonName', value: 'http://example.com' }]);
         cert.sign(Forge.pki.privateKeyFromPem(pair.private));
-        let certDer;
-        if (options.reformat) {
-            certDer = Forge.util.encode64(Forge.asn1.toDer(Forge.pki.certificateToAsn1(Forge.pki.certificateFromPem(Forge.pki.certificateToPem(cert)))).getBytes());
-        }
-        else {
-            certDer = Forge.util.encode64(Forge.asn1.toDer(Forge.pki.certificateToAsn1(cert)).getBytes());
-        }
-
+        const certDer = Forge.util.encode64(Forge.asn1.toDer(Forge.pki.certificateToAsn1(cert)).getBytes());
         key.x5c = [certDer];
         key.x5t = key.kid;
     }
