@@ -65,9 +65,9 @@ describe('Plugin', () => {
         expect(res7.statusCode).to.equal(401);
     });
 
-    it('authenticates a request (RSA256 public)', { retry: true }, async () => {
+    it('authenticates a request (RSA256 public)', async () => {
 
-        const jwks = await Mock.jwks({ rsa: false, public: true, reformat: true });
+        const jwks = await Mock.jwks({ rsa: false, public: true });
 
         const server = Hapi.server();
         await server.register(Jwt);
@@ -196,10 +196,10 @@ describe('Plugin', () => {
         expect(res2.statusCode).to.equal(401);
     });
 
-    it('supports multiple strategies', { retry: true }, async () => {
+    it('supports multiple strategies', async () => {
 
         const secret = 'some_shared_secret';
-        const jwks = await Mock.jwks({ reformat: true });
+        const jwks = await Mock.jwks();
 
         const server = Hapi.server();
         await server.register(Jwt);
