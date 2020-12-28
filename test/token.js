@@ -85,6 +85,20 @@ describe('Token', () => {
         });
     });
 
+    it('creates and verifies a token (encoding)', () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ test: 'ok' }, secret, { encoding: 'utf16le' });
+        const artifacts = Jwt.token.decode(token, { encoding: 'utf16le' });
+        Jwt.token.verify(artifacts, secret);
+
+        expect(artifacts.decoded).to.equal({
+            header: { alg: 'HS256', typ: 'JWT' },
+            payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+            signature: artifacts.decoded.signature
+        });
+    });
+
     describe('generate()', () => {
 
         it('creates and verifies a token (custom now)', () => {
@@ -175,6 +189,37 @@ describe('Token', () => {
             const orig = Jwt.token.decode(token);
 
             const artifacts = Jwt.token.decode(orig.raw.payload + '.' + orig.raw.signature, { headless: orig.decoded.header });
+            Jwt.token.verify(artifacts, secret);
+
+            expect(artifacts.decoded).to.equal({
+                header: { alg: 'HS256', typ: 'JWT' },
+                payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+                signature: artifacts.decoded.signature
+            });
+        });
+
+        it('decodes a headless token (encoded with custom encoding before base64)', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok' }, secret, { encoding: 'utf16le' });
+            const head = token.split('.', 1)[0];
+            const tail = token.substring(head.length + 1);
+            const artifacts = Jwt.token.decode(tail, { headless: head, encoding: 'utf16le' });
+            Jwt.token.verify(artifacts, secret);
+
+            expect(artifacts.decoded).to.equal({
+                header: { alg: 'HS256', typ: 'JWT' },
+                payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+                signature: artifacts.decoded.signature
+            });
+        });
+
+        it('decodes a headless token (object with custom encoding)', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok' }, secret, { encoding: 'utf16le' });
+            const orig = Jwt.token.decode(token, { encoding: 'utf16le' });
+            const artifacts = Jwt.token.decode(orig.raw.payload + '.' + orig.raw.signature, { headless: orig.decoded.header, encoding: 'utf16le' });
             Jwt.token.verify(artifacts, secret);
 
             expect(artifacts.decoded).to.equal({

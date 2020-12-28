@@ -171,6 +171,7 @@ describe('Plugin', () => {
         const secret = 'some_shared_secret';
         const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { headless: true });
 
+
         const server = Hapi.server();
         await server.register(Jwt);
 
@@ -182,6 +183,36 @@ describe('Plugin', () => {
                 iss: 'urn:issuer:test',
                 sub: false
             },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            }
+        });
+
+        server.auth.default('jwt');
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${token}` } });
+        expect(res.result).to.equal('steve');
+    });
+
+    it('support encoded headers and payload in tokens', async () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { encoding: 'utf16le' });
+
+        const server = Hapi.server();
+        await server.register(Jwt);
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            headless: { alg: 'HS256', typ: 'JWT' },
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            encoding: 'utf16le',
             validate: (artifacts, request, h) => {
 
                 return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
