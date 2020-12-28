@@ -166,6 +166,64 @@ describe('Plugin', () => {
         expect(res.result).to.equal('steve');
     });
 
+    it('support headless tokens (object)', async () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { headless: true });
+
+        const server = Hapi.server();
+        await server.register(Jwt);
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            headless: { alg: 'HS256', typ: 'JWT' },
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            }
+        });
+
+        server.auth.default('jwt');
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${token}` } });
+        expect(res.result).to.equal('steve');
+    });
+
+    it('handles failure when headless is defined and token contains header', async () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret);
+
+        const server = Hapi.server();
+        await server.register(Jwt);
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            headless: { alg: 'HS256', typ: 'JWT' },
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            }
+        });
+
+        server.auth.default('jwt');
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${token}` } });
+        expect(res.statusCode).to.equal(401);
+    });
+
     it('authenticates a request (none)', async () => {
 
         const server = Hapi.server();

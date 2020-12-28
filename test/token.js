@@ -72,6 +72,19 @@ describe('Token', () => {
         });
     });
 
+    it('creates and verifies a headless token', () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ test: 'ok' }, secret, { headless: true });
+        const artifacts = Jwt.token.decode(token, { headless: { alg: 'HS256', typ: 'JWT' } });
+
+        expect(artifacts.decoded).to.equal({
+            header: { alg: 'HS256', typ: 'JWT' },
+            payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+            signature: artifacts.decoded.signature
+        });
+    });
+
     describe('generate()', () => {
 
         it('creates and verifies a token (custom now)', () => {
@@ -206,6 +219,13 @@ describe('Token', () => {
 
             const token = `${Jwt.utils.b64stringify({ typ: 'JWT' })}.${Jwt.utils.b64stringify({}, 'utf8')}.`;
             expect(() => Jwt.token.decode(token)).to.throw('Token header missing alg attribute');
+        });
+
+        it('errors on header present in token and headless provided', () => {
+
+            const secret = 'some_shared_secret';
+            const token = Jwt.token.generate({ test: 'ok' }, secret);
+            expect(() => Jwt.token.decode(token, { headless: { alg: 'HS256', typ: 'JWT' } })).to.throw('Token contains header');
         });
     });
 
