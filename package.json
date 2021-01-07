@@ -4,6 +4,7 @@
     "version": "2.0.1",
     "repository": "git://github.com/hapijs/jwt",
     "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
@@ -30,7 +31,8 @@
         "@hapi/hapi": "20.x.x",
         "@hapi/lab": "24.x.x",
         "node-forge": "0.10.x",
-        "node-rsa": "1.x.x"
+        "node-rsa": "1.x.x",
+        "typescript": "^4.1.3"
     },
     "scripts": {
         "test": "lab -a @hapi/code -t 100 -L -m 10000",
