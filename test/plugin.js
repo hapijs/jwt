@@ -199,7 +199,7 @@ describe('Plugin', () => {
     it('support encoded headers and payload in tokens', async () => {
 
         const secret = 'some_shared_secret';
-        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { encoding: 'utf16le' });
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { headless: true, encoding: 'utf16le' });
 
         const server = Hapi.server();
         await server.register(Jwt);

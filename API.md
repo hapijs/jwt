@@ -181,13 +181,10 @@ In addition to keys you can provide other options.
     - `exp` - Boolean to determine if the "Expiration Time" [NumericDate](#registered-claim-names) of the token should be validated. Default is `true`.
     - `maxAgeSec` - Integer to determine the maximum age of the token in seconds.  Default is `0`.  This is time validation using the "Issued At" [NumericDate](#registered-claim-names) (`iat`). Please note that `0` effectively disables this validation, it does not make the maximum age of the token 0 seconds.  Also if `maxAgeSec` is not `0` and `exp` is `true`, both will be validated and if either validation fails, the token validation will fail.
     - `timeSkewSec` - Integer to adust `exp` and `maxAgeSec` to account for server time drift in seconds. Default is `0`.
-<<<<<<< HEAD
 ##### headless
  - `headless` - String representing `base64` header **or** an Object to use as a header on headless tokens. If this is set, tokens that contain a header section will return `401`.
-=======
 ##### encoding
   - `encoding` - String that defines the encoding of the header and payload Object after the `base64` decoding of the token. Default is `utf8`.
->>>>>>> fix encoding in generate, add to decode and plugin
 ##### httpAuthScheme
   - `httpAuthScheme` - String that represents the Authentication Scheme. Default is `'Bearer'`.
 ##### unauthorizedAttributes
