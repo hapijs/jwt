@@ -199,7 +199,7 @@ declare namespace hapiJwt {
     /**
      * The "iss" (issuer) claim identifies the principal that issued the JWT. Expressed in a string.
      */
-    iss: string;
+    iss?: string;
     /**
      * The "sub" (subject) claim identifies the principal that is the subject of the JWT. Expressed in a string.
      */
@@ -207,7 +207,7 @@ declare namespace hapiJwt {
     /**
      * The "aud" (audience) claim identifies the recipients that the JWT is intended for. Expressed in a string.
      */
-    aud: string;
+    aud?: string;
     /**
      * The "exp" (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing. Expressed in NumericDate.
      */
@@ -286,11 +286,11 @@ declare namespace hapiJwt {
     /**
      * String or array of strings that matches the JWT ID of the token.
      */
-    jti: string | string[];
+    jti?: string | string[];
     /**
      *String or array of strings that matches the nonce of the token. nonce is used on Open ID for the ID Tokens.
      */
-    nonce: string | string[];
+    nonce?: string | string[];
     /**
      * Integer that represents the "Not Before" NumericDate of the token.
      */
