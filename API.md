@@ -25,10 +25,10 @@ internals.start = async function () {
     // Use verify: To determine how key contents are verified beyond signature.
     // If verify is set to false, the keys option is not required and ignored.
     // The verify: { aud, iss, sub } options are required if verify is not set to false.
-    // The verify: { exp, nbf, timeSkewSec, maxAgeSec } paramaters have defaults.
+    // The verify: { exp, nbf, timeSkewSec, maxAgeSec } parameters have defaults.
     // Use validate: To create a function called after token validation.
 
-    server.auth.strategy('my_jwt_stategy', 'jwt', {
+    server.auth.strategy('my_jwt_strategy', 'jwt', {
         keys: 'some_shared_secret',
         verify: {
             aud: 'urn:audience:test',
@@ -50,7 +50,7 @@ internals.start = async function () {
 
     // Set the strategy
 
-    server.auth.default('my_jwt_stategy');
+    server.auth.default('my_jwt_strategy');
 };
 
 internals.start();
@@ -58,7 +58,7 @@ internals.start();
 ### server.auth.strategy
 Declares a named strategy using the jwt scheme.
 
-`server.auth.strategy('my_jwt_stategy', 'jwt', options)`
+`server.auth.strategy('my_jwt_strategy', 'jwt', options)`
 #### options
 - `options` - Config object containing keys to define your jwt authentication and response with the following:
   - `keys` - Object or array of objects containing the key method to be used for jwt verification. The keys object can be expressed in many ways. See [keys option examples](#keys-option-examples) for a handful of ways to express this option.
