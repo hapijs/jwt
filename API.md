@@ -280,7 +280,7 @@ const token = Jwt.token.generate(
 const decodedToken = Jwt.token.decode(token);
 
 
-// Greate funtion to verify a token
+// Create function to verify a token
 
 const verifyToken = (artifact, secret, options = {}) => {
 
@@ -297,7 +297,7 @@ const verifyToken = (artifact, secret, options = {}) => {
 
 };
 
-// Get response of a succesful verification
+// Get response of a successful verification
 
 const validResponse = verifyToken(decodedToken, 'some_shared_secret');
 
@@ -307,7 +307,7 @@ const badSecretResponse = verifyToken(decodedToken, 'some_unshared_secret');
 
 // Get response of a unsuccessful verification due to wrong iss
 
-const badIssResonse = verifyToken(decodedToken, 'some_shared_secret', { iss: 'urn:issuer:different_test' });
+const badIssResponse = verifyToken(decodedToken, 'some_shared_secret', { iss: 'urn:issuer:different_test' });
 
 // Display results to console
 
@@ -317,7 +317,7 @@ console.dir(
         decodedToken,
         validResponse,
         badSecretResponse,
-        badIssResonse
+        badIssResponse
     },
     { depth: null }
 );
@@ -348,7 +348,7 @@ Displays the following to the console:
   },
   validResponse: { isValid: true },
   badSecretResponse: { isValid: false, error: 'Invalid token signature' },
-  badIssResonse: { isValid: false, error: 'Token payload iss value not allowed' }
+  badIssResponse: { isValid: false, error: 'Token payload iss value not allowed' }
 }
 ```
 ### generate
@@ -360,7 +360,7 @@ Generates a token as a string where:
     - `key` - String or buffer that creates signature.
     - `algorithm`- String containing an accepted [algorithm](#Key-algorithms-supported-by-jwt) to be used.  Default is `'HS256'`.
 - `options` - Optional configuration object with the following:
-    - `header` - Object to put addtional key/value pairs in the header of the token in addition to `alg` and `typ`.
+    - `header` - Object to put additional key/value pairs in the header of the token in addition to `alg` and `typ`.
     - `typ` Boolean if set to `false` `typ: 'JWT'` is not included in the header.
     - `now` - Integer as an alternative way to set `iat` claim.  Takes JavaScript style epoch time (with ms).  `iat` claim must not be set and `iat` option must not be `false`. Milliseconds are truncated, not rounded.
     - `ttlSec` -  Integer as an alternative way to set `exp` claim. `exp` is set to be `iat` + `ttlSec`.  `exp` claim must not be set.
@@ -376,7 +376,7 @@ Returns an Object of a decoded token in the format of `artifacts` described in t
 ### verify
 `verify(artifacts, secret, [options])`
 
-A function that will complete if verification passes or throw an error if verfication fails where:
+A function that will complete if verification passes or throw an error if verification fails where:
 - `artifacts` - Object of a decoded token in the format of `artifacts` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
     - `key` - String or buffer that creates signature.
@@ -395,7 +395,7 @@ A function that will complete if verification passes or throw an error if verfic
 ### verifySignature
 `verifySignature({ decoded, raw }, secret)`
 
-A function that will complete if the signature is valid or throw an error if invalid.  This does not do verification on the payload.  An expried token will not throw an error if the signature is valid, where:
+A function that will complete if the signature is valid or throw an error if invalid.  This does not do verification on the payload.  An expired token will not throw an error if the signature is valid, where:
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
 - `raw` - Object of decoded token in the format of `artifacts.raw` described in the [`validate`](#more-on-the-validate-function) section above.
  - `secret` - String or buffer that creates signature **or** object where:
@@ -406,7 +406,7 @@ A function that will complete if the signature is valid or throw an error if inv
 
 A function that will complete if payload verification passes or throw an error if payload verification fails. This does not do verification on the signature, where:
 - `decoded` - Object of decoded token in the format of `artifacts.decoded` described in the [`validate`](#more-on-the-validate-function) section above.
-- `options` - Optional configuration object in format of `options` descibed in the [`verify`](#verify(artifacts,-secret,-[options])) section above.
+- `options` - Optional configuration object in format of `options` described in the [`verify`](#verify(artifacts,-secret,-[options])) section above.
 ### verifyTime
 `verifyTime({ decoded }, [options, nowSec])`
 
