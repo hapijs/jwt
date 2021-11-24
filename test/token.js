@@ -104,7 +104,7 @@ describe('Token', () => {
         it('creates and verifies a token (custom iat)', () => {
 
             const secret = 'some_shared_secret';
-            const token = Jwt.token.generate({ test: 'ok', iat: 1556520613 }, { key: secret }, { encoding: 'utf8' });
+            const token = Jwt.token.generate({ test: 'ok', iat: 1556520613 }, { key: secret });
             const artifacts = Jwt.token.decode(token);
             Jwt.token.verify(artifacts, secret);
 
