@@ -254,6 +254,42 @@ describe('Plugin', () => {
         expect(res2.statusCode).to.equal(401);
     });
 
+    it('authenticates a request even if request lifecycle is slow', async () => {
+
+        const secret = 'some_shared_secret';
+        const ttl = 1;
+
+        const server = Hapi.server();
+        await server.register(Jwt);
+
+        server.ext('onRequest', async (request, h) => {
+
+            // Wait a tiny bit more than the TTL to process the request
+            await Hoek.wait((ttl + 1) * 1e3);
+            return h.continue;
+        });
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            }
+        });
+
+        server.auth.default('jwt');
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { ttlSec: ttl });
+        const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${token}` } });
+        expect(res.result).to.equal('steve');
+    });
+
     it('supports multiple strategies', async () => {
 
         const secret = 'some_shared_secret';
