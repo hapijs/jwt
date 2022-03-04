@@ -202,12 +202,6 @@ describe('Token', () => {
             expect(() => Jwt.token.decode('.a.b')).to.throw('Invalid token missing header');
         });
 
-        it('errors on non JWT token', () => {
-
-            const token = `${Jwt.utils.b64stringify({ alg: 'none', typ: 'Not JWT' })}.${Jwt.utils.b64stringify({}, 'utf8')}.`;
-            expect(() => Jwt.token.decode(token)).to.throw('Token is not a JWT');
-        });
-
         it('errors on invalid payload', () => {
 
             expect(() => Jwt.token.decode(`${Jwt.utils.b64stringify({ typ: 'JWT', alg: 'none' })}.xxx.`)).to.throw('Invalid token payload');
