@@ -64,7 +64,7 @@ exports.jwks = async function (options = {}) {
 
     return {
         server,
-        endpoint: `${server.info.uri}${path}`,
+        endpoint: `http://localhost:${server.info.port}${path}`,
         kid: key.kid,
         key: pair
     };
