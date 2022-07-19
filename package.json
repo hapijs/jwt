@@ -23,7 +23,7 @@
     "@hapi/boom": "^10.0.0",
     "@hapi/bounce": "^3.0.0",
     "@hapi/bourne": "^3.0.0",
-    "@hapi/catbox-object": "^2.0.0",
+    "@hapi/catbox-object": "^3.0.0",
     "@hapi/cryptiles": "^6.0.0",
     "@hapi/hoek": "^10.0.0",
     "@hapi/wreck": "^18.0.0",
