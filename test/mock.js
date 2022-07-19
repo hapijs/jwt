@@ -64,7 +64,8 @@ exports.jwks = async function (options = {}) {
 
     return {
         server,
-        endpoint: `http://localhost:${server.info.port}${path}`,
+        // This is the host specifically for node v18 w/ hapi v20, re: default host and ipv6 support. See also hapijs/hapi#4357.
+        endpoint: `http://0.0.0.0:${server.info.port}${path}`,
         kid: key.kid,
         key: pair
     };
