@@ -243,7 +243,7 @@ describe('Keys', () => {
 
             server.auth.strategy('jwt', 'jwt', {
                 keys: {
-                    uri: jwks.info.uri + path
+                    uri: `http://0.0.0.0:${jwks.info.port}${path}`
                 },
                 verify: {
                     aud: false,
@@ -270,7 +270,7 @@ describe('Keys', () => {
 
                 server.auth.strategy('jwt', 'jwt', {
                     keys: {
-                        uri: jwks.info.uri + path
+                        uri: `http://0.0.0.0:${jwks.info.port}${path}`
                     },
                     verify: {
                         aud: false,
