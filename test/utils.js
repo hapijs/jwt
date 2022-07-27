@@ -40,7 +40,7 @@ describe('Utils', () => {
 
             const invalidHttpTokens = [
                 'a)b', 'a(b', 'a<b', 'a>b', 'a@b', 'a,b', 'a;b', 'a:b', 'a\\b',
-                'a/b', 'a[b', 'a]b', 'a?b', 'a=b', '{', '}'
+                'a/b', 'a[b', 'a]b', 'a?b', 'a=b', 'q{a', 'b}n'
             ];
 
             for (const token of invalidHttpTokens) {
