@@ -36,7 +36,7 @@ describe('Utils', () => {
             }
         });
 
-        it('errors for invalid cookie names', () => {
+        it('errors for invalid http tokens', () => {
 
             const invalidHttpTokens = [
                 'a)b', 'a(b', 'a<b', 'a>b', 'a@b', 'a,b', 'a;b', 'a:b', 'a\\b',
