@@ -249,6 +249,16 @@ validate: (artifacts, request, h) => {
     };
 }
 ```
+
+##### headerName
+
+ - `headerName` - Tells the jwt plugin to read the token from the header specified. Default is `authorization` 
+
+ ##### cookieName
+
+ - `cookieName` - Tells the jwt plugin to read the token from the cookie specified. Note that the plugin does not allow you to read from cookie and header at the same time, either read from a header or from a cookie. If you want to read from cookie and header you must use multiple strategies with in which one will have `headerName` config and other will have `cookieName` config Default is `undefined` 
+
+
 ## token
 
 In addition to creating an auth strategy, the `jwt` module can be used directly even if you aren't using hapi, to run token based functions.
