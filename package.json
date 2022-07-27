@@ -34,7 +34,7 @@
     "@hapi/code": "8.x.x",
     "@hapi/eslint-plugin": "*",
     "@hapi/hapi": "20.x.x",
-    "@hapi/lab": "24.x.x",
+    "@hapi/lab": "^25.0.1",
     "node-forge": "0.10.x",
     "node-rsa": "1.x.x"
   },
