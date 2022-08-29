@@ -527,4 +527,161 @@ describe('Plugin', () => {
 
         await jwks.server.stop();
     });
+
+    it('uses authorization as headerName when cookieName or headerName is not specified in config', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            }
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${token}` } });
+        expect(res.result).to.equal('steve');
+    });
+
+    it('reads token from cookie specified in cookieName and authenticates', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const cookieName = 'random-cookie';
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            cookieName
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const res = await server.inject({ url: '/', headers: { cookie: `${cookieName}=${token}` } });
+
+        expect(res.result).to.equal('steve');
+    });
+
+    it('reads token from header specified by headerName and authenticates', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const headerName = 'random-header';
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            headerName
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const res = await server.inject({ url: '/', headers: { [headerName]: `Bearer ${token}` } });
+
+        expect(res.result).to.equal('steve');
+    });
+
+    it('errors when token is not present at headerName or cookieName', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const headerName = 'random-header';
+        const cookieName = 'random-cookie';
+
+        server.auth.strategy('jwt-header', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            headerName
+        });
+
+        server.auth.strategy('jwt-cookie', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            cookieName
+        });
+
+        server.route({
+            path: '/',
+            method: 'GET',
+            options: {
+                auth: {
+                    strategies: ['jwt-header', 'jwt-cookie']
+                }
+            },
+            handler: (request) => request.auth.credentials.user
+        });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+
+        const resWithHeader = await server.inject({ url: '/', headers: { 'another-header-name': `Bearer ${token}` } });
+        expect(resWithHeader.statusCode).to.equal(401);
+
+        const resWithCookie = await server.inject({ url: '/', headers: { 'cookie': `another-cookie=${token}` } });
+        expect(resWithCookie.statusCode).to.equal(401);
+    });
 });
