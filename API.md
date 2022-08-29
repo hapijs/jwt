@@ -254,9 +254,9 @@ validate: (artifacts, request, h) => {
 
  - `headerName` - Tells the jwt plugin to read the token from the header specified. Default is `authorization` 
 
- ##### cookieName
+##### cookieName
 
- - `cookieName` - Tells the jwt plugin to read the token from the cookie specified. Note that the plugin does not allow you to read from cookie and header at the same time, either read from a header or from a cookie. If you want to read from cookie and header you must use multiple strategies with in which one will have `headerName` config and other will have `cookieName` config Default is `undefined` 
+ - `cookieName` - Tells the jwt plugin to read the token from the cookie specified. Note that the plugin does not allow you to read from cookie and header at the same time, either read from a header or from a cookie. If you want to read from cookie and header you must use multiple strategies with in which one will have `headerName` config and other will have `cookieName` config. Defaults to `undefined`.
 
 
 ## token

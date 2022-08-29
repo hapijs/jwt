@@ -3,7 +3,6 @@
 const Code = require('@hapi/code');
 const Jwt = require('..');
 const Lab = require('@hapi/lab');
-const { validHttpTokenSchema } = require('../lib/utils');
 
 
 const internals = {};
@@ -32,7 +31,7 @@ describe('Utils', () => {
             const validHttpTokens = ['cookie-name', 'cookie_name', '_cookie-name', 'cookie__name', 'cookie--name', '__--cookie--name__--'];
 
             for (const token of validHttpTokens) {
-                expect(validHttpTokenSchema.validate(token).error).to.not.exist();
+                expect(Jwt.utils.validHttpTokenSchema.validate(token).error).to.not.exist();
             }
         });
 
@@ -44,7 +43,7 @@ describe('Utils', () => {
             ];
 
             for (const token of invalidHttpTokens) {
-                expect(validHttpTokenSchema.validate(token).error).to.exist();
+                expect(Jwt.utils.validHttpTokenSchema.validate(token).error).to.exist();
             }
         });
     });
