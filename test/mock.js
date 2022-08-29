@@ -12,7 +12,7 @@ const internals = {};
 
 exports.jwks = async function (options = {}) {
 
-    const server = Hapi.server({ host: 'localhost' });
+    const server = Hapi.server();
     const path = '/.well-known/jwks.json';
     server.route({ method: 'GET', path, handler: () => server.app.jwks });
     await server.start();
