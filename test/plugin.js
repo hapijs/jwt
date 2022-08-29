@@ -224,6 +224,38 @@ describe('Plugin', () => {
         expect(res.statusCode).to.equal(401);
     });
 
+    it('support utf-8 (non latin1 characters)', async () => {
+
+        const secret = 'some_shared_secret';
+        const token = Jwt.token.generate({ user: '史蒂夫', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { location: '图书馆' } });
+
+        const server = Hapi.server();
+        await server.register(Jwt);
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user, location: artifacts.decoded.header.location } };
+            }
+        });
+
+        server.auth.default('jwt');
+        server.route({ path: '/payload', method: 'GET', handler: (request) => request.auth.credentials.user });
+        server.route({ path: '/header', method: 'GET', handler: (request) => request.auth.credentials.location });
+
+        const res1 = await server.inject({ url: '/payload', headers: { authorization: `Bearer ${token}` } });
+        expect(res1.result).to.equal('史蒂夫');
+
+        const res2 = await server.inject({ url: '/header', headers: { authorization: `Bearer ${token}` } });
+        expect(res2.result).to.equal('图书馆');
+    });
+
     it('authenticates a request (none)', async () => {
 
         const server = Hapi.server();

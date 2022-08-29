@@ -233,7 +233,7 @@ describe('Keys', () => {
 
         it('reports remote source missing payload error', async () => {
 
-            const jwks = Hapi.server({ host: 'localhost' });
+            const jwks = Hapi.server();
             const path = '/.well-known/jwks.json';
             jwks.route({ method: 'GET', path, handler: () => '' });
             await jwks.start();
@@ -243,7 +243,7 @@ describe('Keys', () => {
 
             server.auth.strategy('jwt', 'jwt', {
                 keys: {
-                    uri: jwks.info.uri + path
+                    uri: `http://0.0.0.0:${jwks.info.port}${path}`
                 },
                 verify: {
                     aud: false,
@@ -260,7 +260,7 @@ describe('Keys', () => {
         it('reports remote source invalid payload error', async () => {
 
             for (const payload of [{}, { keys: 123 }, { keys: [] }]) {
-                const jwks = Hapi.server({ host: 'localhost' });
+                const jwks = Hapi.server();
                 const path = '/.well-known/jwks.json';
                 jwks.route({ method: 'GET', path, handler: () => payload });
                 await jwks.start();
@@ -270,7 +270,7 @@ describe('Keys', () => {
 
                 server.auth.strategy('jwt', 'jwt', {
                     keys: {
-                        uri: jwks.info.uri + path
+                        uri: `http://0.0.0.0:${jwks.info.port}${path}`
                     },
                     verify: {
                         aud: false,

@@ -12,7 +12,7 @@ const internals = {};
 
 exports.jwks = async function (options = {}) {
 
-    const server = Hapi.server({ host: 'localhost' });
+    const server = Hapi.server();
     const path = '/.well-known/jwks.json';
     server.route({ method: 'GET', path, handler: () => server.app.jwks });
     await server.start();
@@ -64,7 +64,8 @@ exports.jwks = async function (options = {}) {
 
     return {
         server,
-        endpoint: `${server.info.uri}${path}`,
+        // This is the host specifically for node v18 w/ hapi v20, re: default host and ipv6 support. See also hapijs/hapi#4357.
+        endpoint: `http://0.0.0.0:${server.info.port}${path}`,
         kid: key.kid,
         key: pair
     };
