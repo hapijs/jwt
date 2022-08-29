@@ -252,7 +252,7 @@ validate: (artifacts, request, h) => {
 
 ##### headerName
 
- - `headerName` - Tells the jwt plugin to read the token from the header specified. Default is `authorization` 
+ - `headerName` - Tells the jwt plugin to read the token from the header specified. Default is `'authorization'`.
 
 ##### cookieName
 
