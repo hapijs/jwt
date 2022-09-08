@@ -260,7 +260,7 @@ validate: (artifacts, request, h) => {
 
  ##### urlQueryParamName
 
- - `urlQueryParamName` - Tells the jwt plugin to read the token from the url query parameter specified. Note that the plugin does not allow you to read from cookie, header and url query parameter at the same time, either read from a header or from a cookie or from a query parameter. Defaults to `undefined`.
+ - `urlQueryParamName` - Tells the jwt plugin to read the token from the url query parameter specified. When the url query parameter is specified multiple times (`https://example.com?token=token1&token=token2`) the value of the last one is used. Note that the plugin does not allow you to read from cookie, header and url query parameter at the same time, either read from a header or from a cookie or from a query parameter. Defaults to `undefined`.
 
 
 ## token
