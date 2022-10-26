@@ -50,6 +50,25 @@ describe('Crypto', () => {
         }
     });
 
+    describe('EdDSA', () => {
+
+        const alg = 'EdDSA';
+        const curves = ['ed25519', 'ed448'];
+        for (const crv of curves) {
+            it(`supports ${alg} ${crv}`, () => {
+
+                const header = 'abc';
+                const payload = '123';
+                const value = `${header}.${payload}`;
+
+                const pair = Mock.pair(alg, crv);
+                const signature = Jwt.token.signature.generate(value, alg, pair.private);
+                expect(Jwt.token.signature.verify({ header, payload, signature }, alg, pair.public)).to.be.true();
+            });
+        }
+    });
+
+
     describe('generate()', () => {
 
         it('errors on unsupported algorithm', () => {
