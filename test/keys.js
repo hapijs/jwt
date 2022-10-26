@@ -365,7 +365,7 @@ describe('Keys', () => {
             await server.initialize();
 
             const provider = server.plugins.jwt._providers[0];
-            expect((await provider._cache.get(jwks.endpoint)).get(jwks.kid).algorithms).to.equal(['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512']);
+            expect((await provider._cache.get(jwks.endpoint)).get(jwks.kid).algorithms).to.equal(['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'EdDSA']);
 
             await jwks.server.stop();
         });

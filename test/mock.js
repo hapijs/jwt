@@ -1,5 +1,6 @@
 'use strict';
 
+const Crypto = require('crypto');
 const Cryptiles = require('@hapi/cryptiles');
 const Forge = require('node-forge');
 const Hapi = require('@hapi/hapi');
@@ -81,6 +82,21 @@ exports.pair = function (type = 'rsa', bits = 2048) {
         const keys = {
             private: Forge.pki.privateKeyToPem(pair.privateKey),
             public: Forge.pki.publicKeyToPem(pair.publicKey)
+        };
+
+        return keys;
+    }
+
+    // EdDSA - ed25519
+    // EdDSA - ed448
+
+    if (type === 'EdDSA') {
+        const crv = bits;
+
+        const { privateKey, publicKey } = Crypto.generateKeyPairSync(crv);
+        const keys = {
+            private: privateKey,
+            public: publicKey
         };
 
         return keys;

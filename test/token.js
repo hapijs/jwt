@@ -45,6 +45,38 @@ describe('Token', () => {
         });
     });
 
+    it('creates and verifies a token (EdDSA,ed25519)', () => {
+
+        const pair = Mock.pair('EdDSA', 'ed25519');
+        const token = Jwt.token.generate({ test: 'ok' }, { key: pair.private, algorithm: 'EdDSA' });
+
+        const artifacts = Jwt.token.decode(token);
+        Jwt.token.verify(artifacts, pair.public);
+
+
+        expect(artifacts.decoded).to.equal({
+            header: { alg: 'EdDSA', typ: 'JWT' },
+            payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+            signature: artifacts.decoded.signature
+        });
+    });
+
+    it('creates and verifies a token (EdDSA,ed448)', () => {
+
+        const pair = Mock.pair('EdDSA', 'ed448');
+        const token = Jwt.token.generate({ test: 'ok' }, { key: pair.private, algorithm: 'EdDSA' });
+
+        const artifacts = Jwt.token.decode(token);
+        Jwt.token.verify(artifacts, pair.public);
+
+
+        expect(artifacts.decoded).to.equal({
+            header: { alg: 'EdDSA', typ: 'JWT' },
+            payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
+            signature: artifacts.decoded.signature
+        });
+    });
+
     it('creates and verifies a token (none)', () => {
 
         const token = Jwt.token.generate({ test: 'ok' }, '');
