@@ -145,6 +145,15 @@ OR with optional algorithm and key ID header (kid) like:
     }
     ...
 
+    // Single EdDSA key with algorithms
+    {
+        keys: {
+            key: Mock.pair('EdDSA', 'ed25519').public,
+            algorithms: ['EdDSA']
+        }
+    }
+
+    ...
     // Single JWKS with headers and algorithms
     {
         keys: {
@@ -445,7 +454,7 @@ List and explanation of Registered Claim Names according to [RFC 7519](https://t
 - `jti` - The "jti" (JWT ID) claim provides a unique identifier for the JWT. Expressed in a string.
 - `nonce` - While `nonce` is not an [RFC 7519](https://tools.ietf.org/html/rfc7519#section-4.1) Registered Claim, it is used on [Open ID](https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes) for the ID Tokens.
 ### Key algorithms supported by jwt
-- Public: `['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512']`
+- Public: `['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'EdDSA']`
 - RSA: `['RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512']`
 - HMAC: `['HS256', 'HS384', 'HS512']`
 - No Algorithm: `['none']`
