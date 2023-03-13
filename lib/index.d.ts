@@ -443,12 +443,6 @@ export declare namespace HapiJwt {
     }
 }
 
-// declare const hapiAuthJwt: {
-//     plugin: Plugin<void>;
-//     token: hapiJwt.Token;
-//     crypto: hapiJwt.Crypto;
-//     utils: hapiJwt.Utils;
-// };
 
 export declare const plugin: Plugin<void>;
 export declare const token: HapiJwt.Token;
