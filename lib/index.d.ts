@@ -34,7 +34,8 @@ export declare namespace HapiJwt {
         | 'ES512'
         | 'HS256'
         | 'HS384'
-        | 'HS512';
+        | 'HS512'
+        | 'EdDSA';
     type NoAlgorithm = 'none';
 
     interface StandardKey {
