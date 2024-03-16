@@ -27,9 +27,9 @@
     "@hapi/catbox-object": "^3.0.0",
     "@hapi/cryptiles": "^6.0.0",
     "@hapi/hoek": "^10.0.0",
+    "@hapi/joi": "^17.1.1",
     "@hapi/wreck": "^18.0.0",
-    "ecdsa-sig-formatter": "^1.0.0",
-    "joi": "^17.2.1"
+    "ecdsa-sig-formatter": "^1.0.0"
   },
   "devDependencies": {
     "@hapi/code": "^9.0.0",
