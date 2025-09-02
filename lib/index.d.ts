@@ -19,6 +19,9 @@ declare module '@hapi/hapi' {
     }
 }
 
+type MaybeArray<T> = T | T[];
+type MaybePromise<T> = T | Promise<T>;
+
 export declare namespace HapiJwt {
     // Common definitions
 
@@ -143,15 +146,15 @@ export declare namespace HapiJwt {
         /**
          * String or RegExp or array of strings or RegExp that matches the audience of the token. Set to boolean false to not verify aud.
          */
-        aud: string | string[] | RegExp | RegExp[] | false;
+        aud: MaybeArray<string> | MaybeArray<RegExp> | false;
         /**
          * String or array of strings that matches the issuer of the token. Set to boolean false to not verify iss.
          */
-        iss: string | string[] | false;
+        iss: MaybeArray<string> | false;
         /**
          * String or array of strings that matches the subject of the token. Set to boolean false to not verify sub.
          */
-        sub: string | string[] | false;
+        sub: MaybeArray<string> | false;
         /**
          * Boolean to determine if the "Not Before" NumericDate of the token should be validated. Default is true.
          */
@@ -197,7 +200,7 @@ export declare namespace HapiJwt {
         /**
          * The key method to be used for jwt verification.
          */
-        keys: string | string[] | Buffer | Key | Key[] | NoAlgorithm[] | ((param: any) => string);
+        keys: MaybeArray<string> | MaybeArray<Buffer> | MaybeArray<Key> | NoAlgorithm[] | ((param: any) => MaybePromise<MaybeArray<string> | MaybeArray<StandardKey>>);
         /**
          * Object to determine how key contents are verified beyond key signature. Set to false to do no verification.
          */
@@ -303,23 +306,23 @@ export declare namespace HapiJwt {
         /**
          * String or RegExp or array of strings or RegExp that matches the audience of the token. Set to boolean false to not verify aud.
          */
-        aud: string | string[] | RegExp | RegExp[] | false;
+        aud: MaybeArray<string> | MaybeArray<RegExp> | false;
         /**
          * String or array of strings that matches the issuer of the token. Set to boolean false to not verify iss.
          */
-        iss: string | string[] | false;
+        iss: MaybeArray<string> | false;
         /**
          * String or array of strings that matches the subject of the token. Set to boolean false to not verify sub.
          */
-        sub: string | string[] | false;
+        sub: MaybeArray<string> | false;
         /**
          * String or array of strings that matches the JWT ID of the token.
          */
-        jti?: string | string[] | undefined;
+        jti?: MaybeArray<string> | undefined;
         /**
          * String or array of strings that matches the nonce of the token. nonce is used on Open ID for the ID Tokens.
          */
-        nonce?: string | string[] | undefined;
+        nonce?: MaybeArray<string> | undefined;
         /**
          * Integer that represents the "Not Before" NumericDate of the token.
          */

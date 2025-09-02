@@ -22,6 +22,7 @@ describe('import()', () => {
         expect(Object.keys(Jwt)).to.equal([
             'crypto',
             'default',
+            ...(process.version.match(/^v(\d+)/)[1] >= 23 ? ['module.exports'] : []),
             'plugin',
             'token',
             'utils'
