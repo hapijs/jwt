@@ -25,7 +25,7 @@
     "@hapi/bounce": "^3.0.2",
     "@hapi/bourne": "^3.0.0",
     "@hapi/catbox-object": "^3.0.1",
-    "@hapi/cryptiles": "^6.0.2",
+    "@hapi/cryptiles": "^6.0.3",
     "@hapi/hoek": "^10.0.1",
     "@hapi/wreck": "^18.1.0",
     "ecdsa-sig-formatter": "^1.0.11",
