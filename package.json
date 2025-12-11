@@ -1,7 +1,7 @@
 {
   "name": "@hapi/jwt",
   "description": "JWT (JSON Web Token) Authentication",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "repository": "git://github.com/hapijs/jwt",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
