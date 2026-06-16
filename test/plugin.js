@@ -528,13 +528,42 @@ describe('Plugin', () => {
         await jwks.server.stop();
     });
 
-    it('uses authorization as headerName when cookieName or headerName is not specified in config', async () => {
+    it('does not allow to specify multiple token sources at the same time', async () => {
 
         const secret = 'some_shared_secret';
 
         const server = Hapi.server();
 
-        server.register(Jwt);
+        await server.register(Jwt);
+
+        expect(
+            () => {
+
+                server.auth.strategy('jwt', 'jwt', {
+                    keys: secret,
+                    verify: {
+                        aud: 'urn:audience:test',
+                        iss: 'urn:issuer:test',
+                        sub: false
+                    },
+                    validate: (artifacts, request, h) => {
+
+                        return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+                    },
+                    headerName: 'test',
+                    urlQueryParamName: 'test'
+                });
+            }
+        ).to.throw('cookieName, headerName and urlQueryParam cannot be specified at the same time');
+    });
+
+    it('uses authorization as headerName when cookieName or headerName or urlQueryParamName is not specified in config', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        await server.register(Jwt);
 
         server.auth.strategy('jwt', 'jwt', {
             keys: secret,
@@ -626,7 +655,7 @@ describe('Plugin', () => {
         expect(res.result).to.equal('steve');
     });
 
-    it('errors when token is not present at headerName or cookieName', async () => {
+    it('errors when token is not present at headerName or cookieName or urlQueryParamName specified', async () => {
 
         const secret = 'some_shared_secret';
 
@@ -636,6 +665,7 @@ describe('Plugin', () => {
 
         const headerName = 'random-header';
         const cookieName = 'random-cookie';
+        const urlQueryParamName = 'random-url-param';
 
         server.auth.strategy('jwt-header', 'jwt', {
             keys: secret,
@@ -665,23 +695,168 @@ describe('Plugin', () => {
             cookieName
         });
 
+        server.auth.strategy('jwt-url-query-param', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            urlQueryParamName
+        });
+
+        const handler = (request) => request.auth.credentials.user;
+
         server.route({
-            path: '/',
+            path: '/header-strategy',
             method: 'GET',
             options: {
                 auth: {
-                    strategies: ['jwt-header', 'jwt-cookie']
+                    strategy: 'jwt-header'
                 }
             },
-            handler: (request) => request.auth.credentials.user
+            handler
+        });
+
+        server.route({
+            path: '/cookie-strategy',
+            method: 'GET',
+            options: {
+                auth: {
+                    strategy: 'jwt-cookie'
+                }
+            },
+            handler
+        });
+
+        server.route({
+            path: '/url-strategy',
+            method: 'GET',
+            options: {
+                auth: {
+                    strategy: 'jwt-url-query-param'
+                }
+            },
+            handler
         });
 
         const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
 
-        const resWithHeader = await server.inject({ url: '/', headers: { 'another-header-name': `Bearer ${token}` } });
+        const resWithHeader = await server.inject({ url: '/header-strategy', headers: { 'another-header-name': `Bearer ${token}` } });
         expect(resWithHeader.statusCode).to.equal(401);
 
-        const resWithCookie = await server.inject({ url: '/', headers: { 'cookie': `another-cookie=${token}` } });
+        const resWithCookie = await server.inject({ url: '/cookie-strategy', headers: { 'cookie': `another-cookie=${token}` } });
         expect(resWithCookie.statusCode).to.equal(401);
+
+        const resWithUrl = await server.inject({ url: '/url-strategy?another-query-param=test-token' });
+        expect(resWithUrl.statusCode).to.equal(401);
+    });
+
+    it('reads token from url search param specified in urlQueryParamName and authenticates', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const urlQueryParamName = 'random-url-search-param';
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            urlQueryParamName
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const res = await server.inject({ url: `/?${urlQueryParamName}=${token}` });
+
+        expect(res.result).to.equal('steve');
+    });
+
+    it('reads token from url query param specified in urlQueryParamName and authenticates', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const urlQueryParamName = 'random-url-search-param';
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            urlQueryParamName
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token = Jwt.token.generate({ user: 'steve', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const res = await server.inject({ url: `/?${urlQueryParamName}=${token}` });
+
+        expect(res.result).to.equal('steve');
+    });
+
+    it('reads token from last url query param value is an array', async () => {
+
+        const secret = 'some_shared_secret';
+
+        const server = Hapi.server();
+
+        server.register(Jwt);
+
+        const urlQueryParamName = 'random-url-search-param';
+
+        server.auth.strategy('jwt', 'jwt', {
+            keys: secret,
+            verify: {
+                aud: 'urn:audience:test',
+                iss: 'urn:issuer:test',
+                sub: false
+            },
+            validate: (artifacts, request, h) => {
+
+                return { isValid: true, credentials: { user: artifacts.decoded.payload.user } };
+            },
+            urlQueryParamName
+        });
+
+        server.auth.default('jwt');
+
+        server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+        const token1 = Jwt.token.generate({ user: 'steve1', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+        const token2 = Jwt.token.generate({ user: 'steve2', aud: 'urn:audience:test', iss: 'urn:issuer:test' }, secret, { header: { kid: 'some' } });
+
+        const res = await server.inject({ url: `/?${urlQueryParamName}=${token1}&${urlQueryParamName}=${token2}` });
+
+        expect(res.result).to.equal('steve2');
     });
 });

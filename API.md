@@ -265,7 +265,11 @@ validate: (artifacts, request, h) => {
 
 ##### cookieName
 
- - `cookieName` - Tells the jwt plugin to read the token from the cookie specified. Note that the plugin does not allow you to read from cookie and header at the same time, either read from a header or from a cookie. If you want to read from cookie and header you must use multiple strategies with in which one will have `headerName` config and other will have `cookieName` config. Defaults to `undefined`.
+ - `cookieName` - Tells the jwt plugin to read the token from the cookie specified. Note that the plugin does not allow you to read from cookie, header and url query parameter at the same time, either read from a header or from a cookie or from a query parameter. If you want to read from multiple sources you must use multiple strategies in which one will have `headerName` config and other will have `cookieName` config and so on. Defaults to `undefined`.
+
+ ##### urlQueryParamName
+
+ - `urlQueryParamName` - Tells the jwt plugin to read the token from the url query parameter specified. When the url query parameter is specified multiple times (`https://example.com?token=token1&token=token2`) the value of the last one is used. Note that the plugin does not allow you to read from cookie, header and url query parameter at the same time, either read from a header or from a cookie or from a query parameter. Defaults to `undefined`.
 
 
 ## token
