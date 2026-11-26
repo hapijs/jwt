@@ -286,6 +286,76 @@ describe('Plugin', () => {
         expect(res2.statusCode).to.equal(401);
     });
 
+    describe('empty keys', () => {
+
+        const current = 'current_shared_secret';
+        const previous = undefined;
+        const secrets = new Map([['tenant-a', current]]);
+
+        const emptyKeyToken = Jwt.token.generate({ user: 'admin' }, { key: Buffer.alloc(0), algorithm: 'HS256' }, { header: { kid: 'no-such-kid' } });
+        const unsignedToken = Jwt.token.generate({ user: 'admin' }, '');
+        const legitToken = Jwt.token.generate({ user: 'steve' }, current, { header: { kid: 'tenant-a' } });
+
+        const attempt = async (keys, attackToken) => {
+
+            const server = Hapi.server();
+            await server.register(Jwt);
+            server.auth.strategy('jwt', 'jwt', { keys, verify: { aud: false, iss: false, sub: false }, validate: false });
+            server.auth.default('jwt');
+            server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+            const attack = await server.inject({ url: '/', headers: { authorization: `Bearer ${attackToken}` } });
+            expect(attack.statusCode).to.equal(401);
+
+            const legit = await server.inject({ url: '/', headers: { authorization: `Bearer ${legitToken}` } });
+            expect(legit.result).to.equal('steve');
+        };
+
+        it('rejects an empty buffer returned by a keys function', async () => {
+
+            await attempt(({ decoded }) => Buffer.from(secrets.get(decoded.header.kid) ?? ''), emptyKeyToken);
+        });
+
+        it('rejects an empty key object returned by a keys function', async () => {
+
+            await attempt(({ decoded }) => ({ key: secrets.get(decoded.header.kid) ?? '', algorithms: ['HS256'] }), emptyKeyToken);
+        });
+
+        it('does not read an empty string in a keys function array as none', async () => {
+
+            await attempt(() => [current, previous ?? ''], unsignedToken);
+        });
+
+        it('does not read an empty string in an async keys function array as none', async () => {
+
+            await attempt(() => Promise.resolve([current, previous ?? '']), unsignedToken);
+        });
+
+        it('skips undefined values in a keys function array', async () => {
+
+            await attempt(() => [previous, current], unsignedToken);
+        });
+
+        it('rejects an empty static key in an array', async () => {
+
+            await attempt([current, previous ?? ''], emptyKeyToken);
+        });
+
+        it('keeps the explicit none opt-in from a keys function', async () => {
+
+            for (const keys of [() => ({ key: '', algorithms: ['none'] }), () => [current, { key: '', algorithms: ['none'] }]]) {
+                const server = Hapi.server();
+                await server.register(Jwt);
+                server.auth.strategy('jwt', 'jwt', { keys, verify: { aud: false, iss: false, sub: false }, validate: false });
+                server.auth.default('jwt');
+                server.route({ path: '/', method: 'GET', handler: (request) => request.auth.credentials.user });
+
+                const res = await server.inject({ url: '/', headers: { authorization: `Bearer ${unsignedToken}` } });
+                expect(res.result).to.equal('admin');
+            }
+        });
+    });
+
     it('supports multiple strategies', async () => {
 
         const secret = 'some_shared_secret';

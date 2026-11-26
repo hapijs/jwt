@@ -1,5 +1,7 @@
 'use strict';
 
+const Crypto = require('crypto');
+
 const Code = require('@hapi/code');
 const Hoek = require('@hapi/hoek');
 const Jwt = require('..');
@@ -88,6 +90,24 @@ describe('Token', () => {
             payload: { test: 'ok', iat: artifacts.decoded.payload.iat },
             signature: ''
         });
+    });
+
+    it('rejects a token signed with an empty HMAC key', () => {
+
+        const keys = [Buffer.alloc(0), '', new Uint8Array(0), new DataView(new ArrayBuffer(0))];
+        if (parseInt(process.versions.node) >= 16) {            // Node 14 can't create an empty KeyObject
+            keys.push(Crypto.createSecretKey(Buffer.alloc(0)));
+        }
+
+        const secret = Crypto.createSecretKey(Buffer.from('some_shared_secret'));
+        const legit = Jwt.token.generate({ test: 'ok' }, { key: secret, algorithm: 'HS256' });
+        Jwt.token.verify(Jwt.token.decode(legit), { key: secret, algorithm: 'HS256' });
+
+        for (const key of keys) {
+            const token = Jwt.token.generate({ test: 'ok' }, { key, algorithm: 'HS256' });
+            const artifacts = Jwt.token.decode(token);
+            expect(() => Jwt.token.verify(artifacts, { key, algorithm: 'HS256' })).to.throw('Invalid token signature');
+        }
     });
 
     it('creates and verifies a token (no typ)', () => {
